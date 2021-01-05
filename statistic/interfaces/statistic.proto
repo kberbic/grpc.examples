@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+import "google/protobuf/duration.proto";
+import "google/protobuf/empty.proto";
+import "google/api/annotations.proto";
+import "validation.proto";
+
+service statisticService {
+  rpc get (StatisticQuery) returns (StatisticReturn) {
+      option (google.api.http) = {
+      get: "/statistic"
+    };
+  }
+}
+
+message StatisticQuery {
+  string id = 1 [(validation.required) = true, (validation.pattern) = "^[0-9a-fA-F]{24}$"];
+}
+
+message StatisticReturn {
+  string id = 1;
+  string name = 2;
+  int32 count = 3;
+}
+

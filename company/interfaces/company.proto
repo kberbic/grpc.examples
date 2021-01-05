@@ -57,6 +57,6 @@ message Company {
   string id = 1 [(validation.required)=true, (validation.max)=255];
   string name = 2 [(validation.required)=true, (validation.max)=255];
   string address = 3 [(validation.required)=true, (validation.max)=255];
-  int32 maxEmployees = 4 [(validation.required)=true, (validation.max)=10, (validation.min)=2];
+  int32 maxEmployees = 4;
 }
 

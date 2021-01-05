@@ -6,10 +6,16 @@ import "google/api/annotations.proto";
 import "validation.proto";
 
 service employeeService {
-  rpc create (CreateEmployee) returns (Create) {
+  rpc create (Employee) returns (Create) {
       option (google.api.http) = {
       post: "/employee",
       body: "*"
+    };
+  }
+
+  rpc list (EmployeeQuery) returns (EmployeeList) {
+    option (google.api.http) = {
+      get: "/employee/:companyId"
     };
   }
 }
@@ -18,9 +24,18 @@ message Create {
   string id = 1;
 }
 
-message CreateEmployee {
-  string name = 1 [(validation.required)=true, (validation.max)=255];
-  string address = 2 [(validation.required)=true, (validation.max)=255];
-  string companyId = 3 [(validation.required)=true, (validation.max)=255];
+message EmployeeQuery {
+  string companyId = 1;
+}
+
+message EmployeeList {
+  repeated Employee employees = 1 [(validation.required)=true];
+}
+
+message Employee {
+  string id=1;
+  string name = 2 [(validation.required)=true, (validation.max)=255];
+  string address = 3 [(validation.required)=true, (validation.max)=255];
+  string companyId = 4 [(validation.required)=true, (validation.max)=255];
 }
 

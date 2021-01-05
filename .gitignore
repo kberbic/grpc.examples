@@ -1,9 +1,7 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-auth/node_modules
-company/node_modules
-employee/node_modules
+*/node_modules
 */interfaces/.*
 
 # misc

@@ -1,18 +1,18 @@
 /* eslint-disable no-console */
-const dotenv = await import('dotenv');
-process.env.NODE_ENV = process.env.NODE_ENV || 'local';
-dotenv.config({ path: path.resolve(`./.env.${process.env.NODE_ENV}`) });
-
 import path from 'path';
 import GPRCServer from './server/grpc.js';
 import HttpServer from './server/rest.js';
 import jwt from './providers/jwt.js';
-import services from './services/index.js'; 
+import services from './services/index.js';
 import models from './models/index.js';
 
+const dotenv = await import('dotenv');
+process.env.NODE_ENV = process.env.NODE_ENV || 'local';
+dotenv.config({ path: path.resolve(`./.env.${process.env.NODE_ENV}`) });
+
 const PUBLIC = [
-    "/authService/register", 
-    "/authService/login"
+  '/authService/register',
+  '/authService/login',
 ];
 async function start() {
   const grpc = new GPRCServer({
@@ -27,10 +27,10 @@ async function start() {
   });
 
   models.init()
-      .then(() => grpc.start())
-      .then(() => http.start(grpc.routes))
-      .then(() => console.log('STARTED'))
-      .catch(console.error);
+    .then(() => grpc.start())
+    .then(() => http.start(grpc.routes))
+    .then(() => console.log('STARTED'))
+    .catch(console.error);
 }
 
 start();
