@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 
 import path from 'path';
+import projectName from 'project-name';
 import GRPCClient from './clients/grpc.js';
 import GRPCServer from './server/grpc.js';
 import HttpServer from './server/rest.js';
@@ -17,16 +18,9 @@ dotenv.config({ path: path.resolve(`./.env.${process.env.NODE_ENV}`) });
 // Setup GRPC client
 process.client = await new GRPCClient().load();
 
-const { authService } = process.client;
-const auth = (req, next) => authService
-  .profile(req.metadata)
-// eslint-disable-next-line no-return-assign
-  .then((user) => { req.user = user; next(); })
-  .catch(next);
-
 async function start() {
   const grpc = new GRPCServer({
-    modules: [correlation, auth],
+    modules: [correlation],
     port: process.env.PORT,
     host: '0.0.0.0',
     services,
@@ -40,7 +34,7 @@ async function start() {
     .init()
     .then(() => grpc.start())
     .then(() => http.start(grpc.routes))
-    .then(() => logger.info('Started'))
+    .then(() => logger.info(`${projectName()} STARTED`))
     .catch(logger.error);
 }
 

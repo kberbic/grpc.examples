@@ -1,13 +1,7 @@
-import mongoose from 'mongoose';
-
-const statisticSchema = new mongoose.Schema(
-  {
-    name: String,
-  }, {
-    timestamps: true,
-    collection: 'statistics',
+const Statistic = (sequelize, { DataTypes }) => sequelize.define('statistic', {
+  name: {
+    type: DataTypes.STRING
   },
-);
+});
 
-const Model = mongoose.model('statistic', statisticSchema);
-export default Model;
+export default Statistic;

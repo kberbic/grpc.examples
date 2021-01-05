@@ -14,6 +14,7 @@ const PUBLIC = [
   '/authService/register',
   '/authService/login',
 ];
+
 async function start() {
   const grpc = new GPRCServer({
     modules: [jwt(PUBLIC)],
