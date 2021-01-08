@@ -67,16 +67,18 @@ class Server {
     const [mono] = process.argv.slice(2);
     if (mono !== 'mono') return [];
 
-    if (!process.env.MICROSERVICES) return [];
-
     const currentPath = import.meta.url;
-    const paths = process.env.MICROSERVICES.split(' ')
-        .filter((x) => !currentPath.endsWith(`/${x}/index.js`));
+
+    logger.info('Start service discovering');
+    const paths = this.#getDirectories('../')
+        .filter((x) => fs.existsSync(`../${x}/index.js`)
+            && !currentPath.endsWith(`/${x}/index.js`));
 
     let routes = [];
     const servers = await Promise.all(paths.map(async (x) => import(`../${x}/index.js`)));
 
     // eslint-disable-next-line no-plusplus
+    const founds = [];
     for (let i = 0; i < servers.length; i++) {
       const ChildServer = servers[i].default;
       if (ChildServer.name === Server.name) {
@@ -86,9 +88,19 @@ class Server {
         // eslint-disable-next-line no-await-in-loop
         await models.init();
         routes = routes.concat(grpc.routes);
+        founds.push(paths[i]);
       }
     }
+
+    logger.info(`Finish service discovering, found: ${ founds.join(' ')}`);
+
     return routes;
+  }
+
+  #getDirectories (source) {
+    return fs.readdirSync(source, { withFileTypes: true })
+        .filter((d) => d.isDirectory())
+        .map((d) => d.name);
   }
 }
 
