@@ -1,14 +1,7 @@
-import ServiceError from './service.error.js';
+import ArgumentsError from '../server/arguments.error.js';
 
-export default class InvalidArgumentsError extends ServiceError {
-  constructor(message, fields) {
-    super(ServiceError.GRPC_CODES.INVALID_ARGUMENT, message);
-    if (fields) {
-      this.metadata
-        .internalRepr
-        .set('fields', [JSON.stringify(fields
-          .inner
-          .map((field) => ({ [field.path]: field.errors })))]);
+export default class InvalidArgumentsError extends ArgumentsError {
+    constructor(message, fields) {
+        super(message, fields);
     }
-  }
 }

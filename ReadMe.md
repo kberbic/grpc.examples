@@ -9,6 +9,10 @@ To load and see proto files definitions (services, models), install
 
 ## Projects
 
+### Start all projects like monolithic application (.env.mono)
+    cd statistic
+    npm start -- mono
+
 ### Auth (JWT, MongoDB)
 
 This microservice is generated with command:

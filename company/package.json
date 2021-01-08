@@ -30,6 +30,7 @@
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^1.12.0",
     "mongoose": "^5.11.9",
+    "project-name": "^1.0.0",
     "protobufjs": "^6.10.2"
   },
   "devDependencies": {
