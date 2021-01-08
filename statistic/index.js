@@ -49,9 +49,9 @@ class Server {
 
     models.init()
         .then(() => this.#grpc.start())
-        .then(() => {
+        .then(async () => {
           routes = this.#grpc.routes.concat(routes);
-          process.client = new GRPCClient(routes).load();
+          process.client = await (new GRPCClient(routes)).load();
           return this.#http.start(routes, process.client);
         })
         .then(() => logger.info(`${projectName()} STARTED`))
@@ -64,10 +64,10 @@ class Server {
     const [mono] = process.argv.slice(2);
     if (mono !== 'mono') return [];
 
-    if (!process.env.SERVICES) return [];
+    if (!process.env.MICROSERVICES) return [];
 
     const currentPath = import.meta.url;
-    const paths = process.env.SERVICES.split(' ')
+    const paths = process.env.MICROSERVICES.split(' ')
         .filter((x) => !currentPath.endsWith(`/${x}/index.js`));
 
     let routes = [];
