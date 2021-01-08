@@ -17,7 +17,7 @@ To load and see proto files definitions (services, models), install
 
 This microservice is generated with command:
     
-    grpc-ms -s auth -p 8080 -d mongodb -jwt
+    grpc-ms -s auth -p 8080 -d mongodb -a jwt
 
 Configuration file is .env.local
     
