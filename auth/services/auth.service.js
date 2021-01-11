@@ -1,7 +1,7 @@
 import InvalidArgumentsError from '../errors/invalidarguments.error.js';
 import UnauthenticatedError from '../errors/unauthenticated.error.js';
 import db from '../models/index.js';
-import { generateToken } from '../providers/jwt.js';
+import { generateToken } from '../modules/jwt.js';
 
 export default class authService {
     static proto = 'auth.proto';

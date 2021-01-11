@@ -10,15 +10,9 @@ import GRPCClient from './server/client.js';
 import GRPCServer from './server/grpc.js';
 import HttpServer from './server/rest.js';
 import services from './services/index.js';
-import correlation from './modules/correlation.js';
+import modules from './modules/index.js';
 import models from './models/index.js';
 import logger from './server/logger.js';
-
-const auth = (req, next) => process.client.authService
-  .profile(req.metadata)
-// eslint-disable-next-line no-return-assign
-  .then((user) => { req.user = user; next(); })
-  .catch(next);
 
 const IS_EXEC_PATH = import.meta.url.indexOf(path.resolve()) !== -1;
 class Server {
@@ -34,7 +28,7 @@ class Server {
 
   async start() {
     this.#grpc = new GRPCServer({
-      modules: [correlation, auth],
+      modules: [].concat(modules()),
       port: process.env.PORT,
       host: '0.0.0.0',
       server: this.#server,
@@ -49,14 +43,14 @@ class Server {
     });
 
     models.init()
-      .then(() => this.#grpc.start())
-      .then(async () => {
-        routes = this.#grpc.routes.concat(routes);
-        process.client = await (new GRPCClient(routes)).load();
-        return this.#http.start(routes, process.client);
-      })
-      .then(() => logger.info(`${projectName()} started`))
-      .catch(logger.error);
+        .then(() => this.#grpc.start())
+        .then(async () => {
+          routes = this.#grpc.routes.concat(routes);
+          process.client = await (new GRPCClient(routes)).load();
+          return this.#http.start(routes, process.client);
+        })
+        .then(() => logger.info(`${projectName()} started`))
+        .catch(logger.error);
 
     return { grpc: this.#grpc, models };
   }
@@ -69,14 +63,14 @@ class Server {
 
     logger.info('Start service discovering');
     const paths = this.#getDirectories('../')
-      .filter((x) => fs.existsSync(`../${x}/index.js`)
+        .filter((x) => fs.existsSync(`../${x}/index.js`)
             && !currentPath.endsWith(`/${x}/index.js`));
 
     let routes = [];
     const servers = await Promise.all(paths.map(async (x) => import(`../${x}/index.js`)));
 
-    // eslint-disable-next-line no-plusplus
     const founds = [];
+    // eslint-disable-next-line no-plusplus
     for (let i = 0; i < servers.length; i++) {
       const ChildServer = servers[i].default;
       if (ChildServer.name === Server.name) {
@@ -90,15 +84,15 @@ class Server {
       }
     }
 
-    logger.info(`Finish service discovering, found: ${ founds.join(' ')}`);
+    logger.info(`Finish service discovering, found: ${founds.join(' ')}`);
 
     return routes;
   }
 
   #getDirectories (source) {
     return fs.readdirSync(source, { withFileTypes: true })
-      .filter((d) => d.isDirectory())
-      .map((d) => d.name);
+        .filter((d) => d.isDirectory())
+        .map((d) => d.name);
   }
 }
 

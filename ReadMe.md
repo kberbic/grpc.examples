@@ -9,9 +9,15 @@ To load and see proto files definitions (services, models), install
 
 ## Projects
 
+### Before start please install mongodb and postgre databases
+
 ### Start all projects like monolithic application (.env.mono)
     cd statistic
     npm start -- mono
+
+Reserved ports for this monolithic (auth, company, employee, statistic) application is 8080/GRPC, 8081/HTTP
+
+Monolithic application configuration is in statistic/.env.mono and statistic microservice is startup project for monolithic application
 
 ### Auth (JWT, MongoDB)
 
@@ -95,7 +101,7 @@ company service (service/employee.service.js)
       return { id: output._id };
     }
 
-### Statistic (PostgreSQL)
+### Statistic, startup project for monolithic application (PostgreSQL)
 
 This microservice is generated with command:
 
